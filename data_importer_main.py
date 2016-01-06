@@ -121,16 +121,22 @@ def update_affymetrix_folder(file_path, data_file, affymetrix_file_path_list, up
                         data_importer_logger.log_message('update_affymetrix_folder ----- copying affymetrix: ' + affymetrix_name)
                         shutil.copy2(new_file_path + '/' + affymetrix_name, directory)    
 
+    # if affymetrix_folder does not exists, create one
+    affymetrix_folder_path = upload_file_path + '/affymetrix_folder'
+    if not os.path.exists(affymetrix_folder_path):
+        data_importer_logger.log_message('update_affymetrix_folder ----- creating affymetrix_folder')
+        os.makedirs(affymetrix_folder_path)
+
     # For each folder created, zip it and copy it to live directory
     for directory in folder_dict:
         data_importer_logger.log_message('update_affymetrix_folder ----- compressing affymetrix folder: ' + directory)
         shutil.make_archive(upload_file_path + '/tmp/' + directory, 'zip', upload_file_path + '/tmp/' + directory)
 
-        if os.path.exists(upload_file_path + directory):
+        if os.path.exists(affymetrix_folder_path + directory):
             data_importer_logger.log_message('update_affymetrix_folder ----- removing existing affymetrix folder: ' + directory)
-            os.remove(upload_file_path + directory)
+            os.remove(affymetrix_folder_path + directory)
         data_importer_logger.log_message('update_affymetrix_folder ----- moving affymetrix folder: ' + directory + '.zip')
-        shutil.move(upload_file_path + '/tmp/' + directory + '.zip', upload_file_path)
+        shutil.move(upload_file_path + '/tmp/' + directory + '.zip', affymetrix_folder_path)
 
     # Remove temporary directory
     if os.path.exists(upload_file_path + '/tmp'):
