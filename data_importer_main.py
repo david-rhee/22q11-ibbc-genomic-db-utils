@@ -127,16 +127,25 @@ def update_affymetrix_folder(file_path, data_file, affymetrix_file_path_list, up
         data_importer_logger.log_message('update_affymetrix_folder ----- creating affymetrix_folder')
         os.makedirs(affymetrix_folder_path)
 
-    # For each folder created, zip it and copy it to live directory
+    # For each folder created, zip it, copy it to live directory and remove temporary directory
     for directory in folder_dict:
+        # Remove old archive
+        if os.path.exists(affymetrix_folder_path + '/' + directory + '.zip'):
+            data_importer_logger.log_message('update_affymetrix_folder ----- removing existing affymetrix folder: ' + directory + '.zip')
+            os.remove(affymetrix_folder_path + '/' + directory + '.zip')
+
+        # Compress
         data_importer_logger.log_message('update_affymetrix_folder ----- compressing affymetrix folder: ' + directory)
         shutil.make_archive(upload_file_path + '/tmp/' + directory, 'zip', upload_file_path + '/tmp/' + directory)
 
-        if os.path.exists(affymetrix_folder_path + directory):
-            data_importer_logger.log_message('update_affymetrix_folder ----- removing existing affymetrix folder: ' + directory)
-            os.remove(affymetrix_folder_path + directory)
+        # Move archive to live directory
         data_importer_logger.log_message('update_affymetrix_folder ----- moving affymetrix folder: ' + directory + '.zip')
         shutil.move(upload_file_path + '/tmp/' + directory + '.zip', affymetrix_folder_path)
+
+        # Remove temporary directory for site
+        if os.path.exists(upload_file_path + '/tmp/' + directory):
+            data_importer_logger.log_message('update_affymetrix_folder ----- remove temporary directory: ' + directory)
+            shutil.rmtree(upload_file_path + '/tmp/' + directory)
 
     # Remove temporary directory
     if os.path.exists(upload_file_path + '/tmp'):
