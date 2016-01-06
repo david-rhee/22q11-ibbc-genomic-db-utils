@@ -39,7 +39,7 @@ def initial_insert(file_path, data_file, affymetrix_file_path_list):
                 data_importer_logger.log_message('initial_insert ----- delete or deleted in note of genomic_db_id: ' + genomic_db_id)
 
             else:
-                subject = data_data.get_subject(genomic_db_id, site_id, alias, 'ibbc', owner_site_instance)
+                subject = data_importer_data.get_subject(genomic_db_id, site_id, alias, 'ibbc', owner_site_instance)
 
                 if affymetrix_name:
                     data_importer_data.get_affymetrix(affymetrix_name, subject, affymetrix_file_path_list)
