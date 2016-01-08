@@ -20,10 +20,13 @@ Update Affymetrix Folder
 
 Tab-delimited file with information on how and what to upload
 
-Line 1 - Absolute path of location where data_file.txt resides
-Line 2 - Absolute path of Django media location
-Line 3 - data_files
-Line 4 - Location of raw data files
+Line 1: Absolute path of location where data_file.txt resides
+
+Line 2: Absolute path of Django media location
+
+Line 3: data_files
+
+Line 4: Location of raw data files
 
 Example:
 
