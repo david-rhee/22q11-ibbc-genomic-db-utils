@@ -1,5 +1,6 @@
 ###################################################################
-import os, sys, csv, string, shutil
+import os, sys, csv, string, zipfile
+from os.path import basename
 import django
 import distutils.util
 
@@ -136,7 +137,22 @@ def update_affymetrix_folder(file_path, data_file, affymetrix_file_path_list, up
 
         # Compress
         data_importer_logger.log_message('update_affymetrix_folder ----- compressing affymetrix folder: ' + directory)
-        shutil.make_archive(upload_file_path + '/tmp/' + directory, 'zip', upload_file_path + '/tmp/' + directory)
+        #shutil.make_archive(upload_file_path + '/tmp/' + directory, 'zip', upload_file_path + '/tmp/' + directory)
+
+        zip_directory = upload_file_path + '/tmp/' + directory
+
+        with zipfile.ZipFile(zip_directory + '.zip', "w", compression=zipfile.ZIP_DEFLATED, allowZip64=True) as zf:
+            path = os.path.normpath(zip_directory)
+            zf.write(path, basename(path))
+
+            for dirpath, dirnames, filenames in os.walk(zip_directory):
+                for name in sorted(dirnames):
+                    path = os.path.normpath(os.path.join(dirpath, name))
+                    zf.write(path, basename(path))
+                for name in filenames:
+                    path = os.path.normpath(os.path.join(dirpath, name))
+                    if os.path.isfile(path):
+                        zf.write(path, basename(path))
 
         # Move archive to live directory
         data_importer_logger.log_message('update_affymetrix_folder ----- moving affymetrix folder: ' + directory + '.zip')
