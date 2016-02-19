@@ -36,7 +36,7 @@ def initial_insert(file_path, data_file, affymetrix_file_path_list):
 
             owner_site_instance = data_importer_data.get_site(owner_site)
 
-            if note == 'deleted' or note == 'delete':
+            if 'delete' in note.lower():
                 data_importer_logger.log_message('initial_insert ----- delete or deleted in note of genomic_db_id: ' + genomic_db_id)
 
             else:
@@ -67,7 +67,7 @@ def update_data(file_path, data_file, affymetrix_file_path_list):
 
             owner_site_instance = data_importer_data.get_site(owner_site)
 
-            if note == 'deleted' or note == 'delete':
+            if 'delete' in note.lower():
                 data_importer_logger.log_message('update_data ----- delete or deleted in note of genomic_db_id: ' + genomic_db_id)
                 data_importer_data.delete_subject(genomic_db_id)
 
@@ -112,7 +112,7 @@ def update_affymetrix_folder(file_path, data_file, affymetrix_file_path_list, up
             if not folder_dict.has_key(folder):
                 folder_dict[folder] = ''
 
-            if not (note == 'deleted' or note == 'delete'):
+            if 'delete' not in note.lower():
                 if affymetrix_name:
                     
                     data_importer_logger.log_message('update_affymetrix_folder ----- processing affymetrix: ' + affymetrix_name)
